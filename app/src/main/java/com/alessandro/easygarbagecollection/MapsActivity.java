@@ -54,12 +54,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                LatLng newLocation = new LatLng(
+             /*   LatLng newLocation = new LatLng(
                         dataSnapshot.child("latitude").getValue(Long.class),
                         dataSnapshot.child("longitude").getValue(Long.class)
                 );
 
-                mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));
+                mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));*/
+
+                FirebaseMarker marker = dataSnapshot.getValue(FirebaseMarker.class);
+                String dob = marker.getDob();
+                String dod = marker.getDod();
+                Double latitude = marker.getLatitude();
+                Double longitude = marker.getLongitude();
+                String firstname = marker.getFirstname();
+                String lastname = marker.getLastname();
+                LatLng location = new LatLng(latitude,longitude);
+                mMap.addMarker(new MarkerOptions().position(location).title(firstname).snippet(dob));
             }
 
             @Override
@@ -85,12 +95,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         FirebaseMarker marker = new FirebaseMarker("Lincoln", "Hall", -34.506081, 150.88104, "24/12/1940", "02/07/2016" );
+        FirebaseMarker marker2 = new FirebaseMarker("Alessandro", "Campanello", 41.1260529, 16.8692905, "20/11/2017", "02/07/2016" );
         mRef.push().setValue(marker);
+        mRef.push().setValue(marker2);
 
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
         /*mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
+
+
+
+
+
     }
 }
