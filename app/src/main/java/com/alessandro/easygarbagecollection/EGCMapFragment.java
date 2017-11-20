@@ -96,10 +96,10 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         });
 
 
-        FirebaseMarker marker = new FirebaseMarker("Lincoln", "Hall", -34.506081, 150.88104, "24/12/1940", "02/07/2016" );
-        FirebaseMarker marker2 = new FirebaseMarker("Alessandro", "Campanello", 41.1260529, 16.8692905, "20/11/2017", "02/07/2016" );
-        mRef.push().setValue(marker);
-        mRef.push().setValue(marker2);
+       // FirebaseMarker marker = new FirebaseMarker("Lincoln", "Hall", -34.506081, 150.88104, "24/12/1940", "02/07/2016" );
+        //FirebaseMarker marker2 = new FirebaseMarker("Alessandro", "Campanello", 41.1260529, 16.8692905, "20/11/2017", "02/07/2016" );
+        //mRef.push().setValue(marker);
+        //mRef.push().setValue(marker2);
 
 
         // Add a marker in Sydney and move the camera
