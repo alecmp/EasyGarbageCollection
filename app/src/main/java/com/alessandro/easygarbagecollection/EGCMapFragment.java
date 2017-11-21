@@ -13,6 +13,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +44,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         super.onActivityCreated(savedInstanceState);
         getMapAsync(this);
         mDatabase= FirebaseDatabase.getInstance();
-        mRef = FirebaseDatabase.getInstance().getReference().child("Navigation");
+        mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<LatLng>();
 
        /*  FirebaseMarker marker = new FirebaseMarker("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
@@ -75,9 +76,10 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(41.1101687,16.8788819) , 15.0f) );
 
 
-        mRef.addValueEventListener(new ValueEventListener() {
+       /* mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mMap.clear();
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
                     FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
                     Double latitude = marker.getLatitude();
@@ -86,6 +88,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                     Double fillingLevel = marker.getFillingLevel();
                     LatLng location = new LatLng(latitude,longitude);
                     Log.d("ADebugTag", "Value: " + location);
+
 
                     //select Marker color according with filling level. If >25 adds it to markerPoints
                     if(fillingLevel > 25.0 ){
@@ -106,7 +109,43 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             }
 
 
-            public void fill(){
+           *//* public void fill(){
+                LatLng origin = markerPoints.get(0);
+                LatLng dest = markerPoints.get(markerPoints.size()-1);
+                String url = getDirectionsUrl(origin, dest);
+                DownloadTask downloadTask = new DownloadTask();
+                // Start downloading json data from Google Directions API
+                downloadTask.execute(url);
+            }*//*
+        });
+*/
+
+        mRef.addChildEventListener(new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("ADebugTag", "ON CHILD ADDED");
+                mMap.clear();
+                markerPoints = new ArrayList<LatLng>();
+                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
+                    FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
+                    Double latitude = marker.getLatitude();
+                    Double longitude = marker.getLongitude();
+                    String code = marker.getCode();
+                    Double fillingLevel = marker.getFillingLevel();
+                    LatLng location = new LatLng(latitude,longitude);
+
+
+
+                    //select Marker color according with filling level. If >25 adds it to markerPoints
+                    if(fillingLevel > 25.0 ){
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        markerPoints.add(location);
+                    }
+                    else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                }
                 LatLng origin = markerPoints.get(0);
                 LatLng dest = markerPoints.get(markerPoints.size()-1);
                 String url = getDirectionsUrl(origin, dest);
@@ -114,37 +153,40 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                 // Start downloading json data from Google Directions API
                 downloadTask.execute(url);
 
-            }
-        });
-
-
-        /*mRef.addChildEventListener(new ChildEventListener() {
-
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-             *//*   LatLng newLocation = new LatLng(
-                        dataSnapshot.child("latitude").getValue(Long.class),
-                        dataSnapshot.child("longitude").getValue(Long.class)
-                );
-
-                mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));*//*
-
-                FirebaseMarker marker = dataSnapshot.getValue(FirebaseMarker.class);
-                String dob = marker.getDob();
-                String dod = marker.getDod();
-                Double latitude = marker.getLatitude();
-                Double longitude = marker.getLongitude();
-                String code = marker.getCode();
-                String lastname = marker.getLastname();
-                LatLng location = new LatLng(latitude,longitude);
-                Log.d("ADebugTag", "Value: " + location);
-                markerPoints.add(location);
-                mMap.addMarker(new MarkerOptions().position(location).title(code).snippet(dob));
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d("ADebugTag", "ON CHILD CHANGED");
+                mMap.clear();
+                markerPoints = new ArrayList<LatLng>();
+                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
+                    FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
+                    Double latitude = marker.getLatitude();
+                    Double longitude = marker.getLongitude();
+                    String code = marker.getCode();
+                    Double fillingLevel = marker.getFillingLevel();
+                    LatLng location = new LatLng(latitude,longitude);
+
+
+
+                    //select Marker color according with filling level. If >25 adds it to markerPoints
+                    if(fillingLevel > 25.0 ){
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        markerPoints.add(location);
+                    }
+                    else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                }
+                LatLng origin = markerPoints.get(0);
+                LatLng dest = markerPoints.get(markerPoints.size()-1);
+                String url = getDirectionsUrl(origin, dest);
+                DownloadTask downloadTask = new DownloadTask();
+                // Start downloading json data from Google Directions API
+                downloadTask.execute(url);
+
 
             }
 
@@ -164,10 +206,11 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
 
             }
 
-        });*/
+        });
 
 
     }
+
 
     private String getDirectionsUrl(LatLng origin,LatLng dest){
 
@@ -303,14 +346,11 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             @Override
             protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-                ArrayList<LatLng> points = null;
-                PolylineOptions lineOptions = null;
+                ArrayList<LatLng> points = new ArrayList<LatLng>();;
+                PolylineOptions lineOptions = new PolylineOptions();
 
                 // Traversing through all the routes
                 for(int i=0;i<result.size();i++){
-                    points = new ArrayList<LatLng>();
-                    lineOptions = new PolylineOptions();
-
                     // Fetching i-th route
                     List<HashMap<String, String>> path = result.get(i);
 
@@ -332,7 +372,8 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                 }
 
                 // Drawing polyline in the Google Map for the i-th route
-                mMap.addPolyline(lineOptions);
+                if(points.size()!=0)mMap.addPolyline(lineOptions);
+                //mMap.addPolyline(lineOptions);
             }
         }
     }
