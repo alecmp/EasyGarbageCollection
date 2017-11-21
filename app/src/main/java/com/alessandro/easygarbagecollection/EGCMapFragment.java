@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
@@ -44,7 +45,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
     private GoogleMap mMap;
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
-    private MapView mMapView;
+    private ArrayList<LatLng> markerPoints;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -52,6 +53,18 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         getMapAsync(this);
         mDatabase= FirebaseDatabase.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference().child("Navigation");
+        markerPoints = new ArrayList<LatLng>();
+
+       /*  FirebaseMarker marker = new FirebaseMarker("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
+        FirebaseMarker marker2 = new FirebaseMarker("secondo", "Campanello", 41.104069,16.8785068, "20/11/2017", "02/07/2016" );
+        FirebaseMarker marker3 = new FirebaseMarker("terzo", "Campanello", 41.107092,16.8792508, "20/11/2017", "02/07/2016" );
+        FirebaseMarker marker4 = new FirebaseMarker("end", "Campanello", 41.212305,16.9817258, "20/11/2017", "02/07/2016" );
+        mRef.push().setValue(marker);
+        Log.d("ADebugTag", "Value: " + "aggiunto");
+        mRef.push().setValue(marker2);
+        mRef.push().setValue(marker3);
+        mRef.push().setValue(marker4);*/
+
     }
 
 
@@ -66,18 +79,59 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d("ADebugTag", "Value: " + "entrato");
         mMap = googleMap;
+        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(41.1101687,16.8788819) , 15.0f) );
 
 
-        mRef.addChildEventListener(new ChildEventListener() {
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
+                    FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
+                    String dob = marker.getDob();
+                    String dod = marker.getDod();
+                    Double latitude = marker.getLatitude();
+                    Double longitude = marker.getLongitude();
+                    String firstname = marker.getFirstname();
+                    String lastname = marker.getLastname();
+                    LatLng location = new LatLng(latitude,longitude);
+                    Log.d("ADebugTag", "Value: " + location);
+                    markerPoints.add(location);
+                    mMap.addMarker(new MarkerOptions().position(location).title(firstname).snippet(dob));
+                }
+                fill();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+
+            public void fill(){
+                LatLng origin = markerPoints.get(0);
+                LatLng dest = markerPoints.get(markerPoints.size()-1);
+                String url = getDirectionsUrl(origin, dest);
+                DownloadTask downloadTask = new DownloadTask();
+                // Start downloading json data from Google Directions API
+                downloadTask.execute(url);
+
+            }
+        });
+
+
+        /*mRef.addChildEventListener(new ChildEventListener() {
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-             /*   LatLng newLocation = new LatLng(
+             *//*   LatLng newLocation = new LatLng(
                         dataSnapshot.child("latitude").getValue(Long.class),
                         dataSnapshot.child("longitude").getValue(Long.class)
                 );
 
-                mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));*/
+                mMap.addMarker(new MarkerOptions().position(newLocation).title(dataSnapshot.getKey()));*//*
 
                 FirebaseMarker marker = dataSnapshot.getValue(FirebaseMarker.class);
                 String dob = marker.getDob();
@@ -87,7 +141,10 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                 String firstname = marker.getFirstname();
                 String lastname = marker.getLastname();
                 LatLng location = new LatLng(latitude,longitude);
+                Log.d("ADebugTag", "Value: " + location);
+                markerPoints.add(location);
                 mMap.addMarker(new MarkerOptions().position(location).title(firstname).snippet(dob));
+
             }
 
             @Override
@@ -97,6 +154,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+
 
             }
 
@@ -109,28 +167,9 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             public void onCancelled(DatabaseError databaseError) {
 
             }
-        });
 
+        });*/
 
-       // FirebaseMarker marker = new FirebaseMarker("Lincoln", "Hall", -34.506081, 150.88104, "24/12/1940", "02/07/2016" );
-        //FirebaseMarker marker2 = new FirebaseMarker("Alessandro", "Campanello", 41.1260529, 16.8692905, "20/11/2017", "02/07/2016" );
-        //mRef.push().setValue(marker);
-        //mRef.push().setValue(marker2);
-
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        /*mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
-
-        LatLng origin = new LatLng(41.0479814, 16.9225185);
-        LatLng dest = new LatLng(41.0642390, 16.9237370);
-        mMap.addMarker(new MarkerOptions().position(origin).title("Capurso"));
-        mMap.addMarker(new MarkerOptions().position(dest).title("Triggiano"));
-        String url = getDirectionsUrl(origin, dest);
-        DownloadTask downloadTask = new DownloadTask();
-        // Start downloading json data from Google Directions API
-        downloadTask.execute(url);
 
     }
 
@@ -145,13 +184,23 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         // Sensor enabled
         String sensor = "sensor=false";
 
+        // Waypoints
+        String waypoints = "";
+        for(int i=2;i<markerPoints.size();i++){
+            LatLng point  = (LatLng) markerPoints.get(i);
+            if(i==2)
+                waypoints = "waypoints=";
+            waypoints += point.latitude + "," + point.longitude + "|";
+        }
+
         // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String parameters = str_origin+"&"+str_dest+"&"+sensor+"&"+waypoints;
 
         // Output format
         String output = "json";
 
         // Building the url to the web service
+       // String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
         String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
 
         return url;
@@ -231,64 +280,65 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         }
     }
 
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
 
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+        /** A class to parse the Google Places in JSON format */
+        private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
 
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
+            // Parsing the data in non-ui thread
+            @Override
+            protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
-            try{
-                jObject = new JSONObject(jsonData[0]);
-                DirectionsJSONParser parser = new DirectionsJSONParser();
+                JSONObject jObject;
+                List<List<HashMap<String, String>>> routes = null;
 
-                // Starts parsing data
-                routes = parser.parse(jObject);
-            }catch(Exception e){
-                e.printStackTrace();
+                try{
+                    jObject = new JSONObject(jsonData[0]);
+                    DirectionsJSONParser parser = new DirectionsJSONParser();
+
+                    // Starts parsing data
+                    routes = parser.parse(jObject);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+                return routes;
             }
-            return routes;
-        }
 
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
+            // Executes in UI thread, after the parsing process
+            @Override
+            protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-            // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
+                ArrayList<LatLng> points = null;
+                PolylineOptions lineOptions = null;
 
+                // Traversing through all the routes
+                for(int i=0;i<result.size();i++){
+                    points = new ArrayList<LatLng>();
+                    lineOptions = new PolylineOptions();
 
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
+                    // Fetching i-th route
+                    List<HashMap<String, String>> path = result.get(i);
 
-                // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
+                    // Fetching all the points in i-th route
+                    for(int j=0;j<path.size();j++){
+                        HashMap<String,String> point = path.get(j);
 
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
+                        double lat = Double.parseDouble(point.get("lat"));
+                        double lng = Double.parseDouble(point.get("lng"));
+                        LatLng position = new LatLng(lat, lng);
 
-                    points.add(position);
+                        points.add(position);
+                    }
+
+                    // Adding all the points in the route to LineOptions
+                    lineOptions.addAll(points);
+                    lineOptions.width(16);
+                    lineOptions.color(Color.parseColor("#2196F3")).geodesic(true).zIndex(8);
                 }
 
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(16);
-                lineOptions.color(Color.parseColor("#2196F3")).geodesic(true).zIndex(8);
+                // Drawing polyline in the Google Map for the i-th route
+                mMap.addPolyline(lineOptions);
             }
-
-            // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
         }
     }
 
-}
+

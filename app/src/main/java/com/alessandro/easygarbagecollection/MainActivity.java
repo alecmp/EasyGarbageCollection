@@ -16,11 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -44,16 +48,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ViewPager vp_pages= (ViewPager) findViewById(R.id.vp_pages);
-        PagerAdapter pagerAdapter= new SectionsPagerAdapter(getSupportFragmentManager());
+        ViewPager vp_pages = (ViewPager) findViewById(R.id.vp_pages);
+        PagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         vp_pages.setAdapter(pagerAdapter);
 
-        TabLayout tbl_pages= (TabLayout) findViewById(R.id.tbl_pages);
+        TabLayout tbl_pages = (TabLayout) findViewById(R.id.tbl_pages);
         tbl_pages.setupWithViewPager(vp_pages);
-
     }
-
-
 
 
     @Override

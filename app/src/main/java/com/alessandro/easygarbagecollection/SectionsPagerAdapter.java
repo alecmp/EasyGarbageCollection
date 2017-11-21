@@ -27,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
                 break;
             case 1:
-                fragment = new EGCMapFragment();
+                fragment = new BlankFragment();
                 break;
             default:
                 break;
