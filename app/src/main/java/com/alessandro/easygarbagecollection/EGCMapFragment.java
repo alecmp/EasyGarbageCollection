@@ -2,26 +2,17 @@ package com.alessandro.easygarbagecollection;
 
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -89,16 +80,21 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
                     FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
-                    String dob = marker.getDob();
-                    String dod = marker.getDod();
                     Double latitude = marker.getLatitude();
                     Double longitude = marker.getLongitude();
-                    String firstname = marker.getFirstname();
-                    String lastname = marker.getLastname();
+                    String code = marker.getCode();
+                    Double fillingLevel = marker.getFillingLevel();
                     LatLng location = new LatLng(latitude,longitude);
                     Log.d("ADebugTag", "Value: " + location);
-                    markerPoints.add(location);
-                    mMap.addMarker(new MarkerOptions().position(location).title(firstname).snippet(dob));
+
+                    //select Marker color according with filling level. If >25 adds it to markerPoints
+                    if(fillingLevel > 25.0 ){
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                        markerPoints.add(location);
+                    }
+                    else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
                 fill();
 
@@ -138,12 +134,12 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                 String dod = marker.getDod();
                 Double latitude = marker.getLatitude();
                 Double longitude = marker.getLongitude();
-                String firstname = marker.getFirstname();
+                String code = marker.getCode();
                 String lastname = marker.getLastname();
                 LatLng location = new LatLng(latitude,longitude);
                 Log.d("ADebugTag", "Value: " + location);
                 markerPoints.add(location);
-                mMap.addMarker(new MarkerOptions().position(location).title(firstname).snippet(dob));
+                mMap.addMarker(new MarkerOptions().position(location).title(code).snippet(dob));
 
             }
 

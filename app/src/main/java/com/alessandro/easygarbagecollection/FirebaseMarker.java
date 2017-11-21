@@ -6,10 +6,8 @@ package com.alessandro.easygarbagecollection;
 
 public class FirebaseMarker {
 
-    public String dob;
-    public String dod;
-    public String firstname;
-    public String lastname;
+    public String code;
+    public double fillingLevel;
     public double latitude;
     public double longitude;
 
@@ -18,45 +16,28 @@ public class FirebaseMarker {
     public FirebaseMarker() {
     }
 
-    public FirebaseMarker(String firstname, String lastname, double latitude, double longitude, String dob, String dod) {
-        this.dob = dob;
-        this.dod = dod;
-        this.firstname = firstname;
-        this.lastname = lastname;
+    public FirebaseMarker(String code, double fillingLevel, double latitude, double longitude) {
+        this.code = code;
+        this.fillingLevel = fillingLevel;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public String getDob() {
-        return dob;
+
+    public String getCode() {
+        return code;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public String getDod() {
-        return dod;
+    public double getFillingLevel() {
+        return fillingLevel;
     }
 
-    public void setDod(String dod) {
-        this.dod = dod;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setFillingLevel(double fillingLevel) {
+        this.fillingLevel = fillingLevel;
     }
 
     public double getLongitude() {
