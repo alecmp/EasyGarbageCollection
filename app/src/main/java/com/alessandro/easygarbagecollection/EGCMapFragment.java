@@ -38,6 +38,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
     private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
     private ArrayList<LatLng> markerPoints;
+    private static final Double TRESHOLD = 25.0;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -127,6 +128,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                 Log.d("ADebugTag", "ON CHILD ADDED");
                 mMap.clear();
                 markerPoints = new ArrayList<LatLng>();
+                Log.d("size iniziale", "is" + markerPoints.size());
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
                     FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
                     Double latitude = marker.getLatitude();
@@ -135,19 +137,19 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                     Double fillingLevel = marker.getFillingLevel();
                     LatLng location = new LatLng(latitude,longitude);
 
-
-
                     //select Marker color according with filling level. If >25 adds it to markerPoints
-                    if(fillingLevel > 25.0 ){
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                        if(fillingLevel > TRESHOLD ){
+                            mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                        markerPoints.add(location);
-                    }
-                    else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                         markerPoints.add(location);
+                         }
+                          else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
+                Log.d("size finale", "is" + markerPoints.size());
                 LatLng origin = markerPoints.get(0);
-                LatLng dest = markerPoints.get(markerPoints.size()-1);
+                LatLng dest = markerPoints.get(1);
+                Log.d("size finale", "is" + markerPoints.get(1).toString());
                 String url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
                 // Start downloading json data from Google Directions API
@@ -161,6 +163,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                 Log.d("ADebugTag", "ON CHILD CHANGED");
                 mMap.clear();
                 markerPoints = new ArrayList<LatLng>();
+                Log.d("size iniziale", "is" + markerPoints.size());
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
                     FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
                     Double latitude = marker.getLatitude();
@@ -169,10 +172,8 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                     Double fillingLevel = marker.getFillingLevel();
                     LatLng location = new LatLng(latitude,longitude);
 
-
-
                     //select Marker color according with filling level. If >25 adds it to markerPoints
-                    if(fillingLevel > 25.0 ){
+                    if(fillingLevel > TRESHOLD ){
                         mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                         markerPoints.add(location);
@@ -180,8 +181,10 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
                     else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
                             .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
+                Log.d("size finale", "is" + markerPoints.size());
                 LatLng origin = markerPoints.get(0);
-                LatLng dest = markerPoints.get(markerPoints.size()-1);
+                Log.d("last element", "is" + markerPoints.get(1).toString());
+                LatLng dest = markerPoints.get(1);
                 String url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
                 // Start downloading json data from Google Directions API
@@ -225,8 +228,10 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
 
         // Waypoints
         String waypoints = "";
+        //for(int i=2;i<markerPoints.size();i++){
         for(int i=2;i<markerPoints.size();i++){
             LatLng point  = (LatLng) markerPoints.get(i);
+            Log.d("waypoint", "is " + markerPoints.get(i));
             if(i==2)
                 waypoints = "waypoints=";
             waypoints += point.latitude + "," + point.longitude + "|";
@@ -239,9 +244,9 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         String output = "json";
 
         // Building the url to the web service
-       // String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+        // String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
         String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-
+        Log.d("url", "is " + url);
         return url;
     }
 
@@ -320,62 +325,65 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
     }
 
 
-        /** A class to parse the Google Places in JSON format */
-        private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
+    /** A class to parse the Google Places in JSON format */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
 
-            // Parsing the data in non-ui thread
-            @Override
-            protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+        // Parsing the data in non-ui thread
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
-                JSONObject jObject;
-                List<List<HashMap<String, String>>> routes = null;
+            JSONObject jObject;
+            List<List<HashMap<String, String>>> routes = null;
 
-                try{
-                    jObject = new JSONObject(jsonData[0]);
-                    DirectionsJSONParser parser = new DirectionsJSONParser();
+            try{
+                jObject = new JSONObject(jsonData[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
 
-                    // Starts parsing data
-                    routes = parser.parse(jObject);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-                return routes;
+                // Starts parsing data
+                routes = parser.parse(jObject);
+            }catch(Exception e){
+                e.printStackTrace();
             }
+            return routes;
+        }
 
-            // Executes in UI thread, after the parsing process
-            @Override
-            protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+        // Executes in UI thread, after the parsing process
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-                ArrayList<LatLng> points = new ArrayList<LatLng>();;
-                PolylineOptions lineOptions = new PolylineOptions();
+            ArrayList<LatLng> points = null;
+            PolylineOptions lineOptions = null;
 
-                // Traversing through all the routes
-                for(int i=0;i<result.size();i++){
-                    // Fetching i-th route
-                    List<HashMap<String, String>> path = result.get(i);
+            // Traversing through all the routes
+            for(int i=0;i<result.size();i++){
+                points = new ArrayList<LatLng>();
+                lineOptions = new PolylineOptions();
 
-                    // Fetching all the points in i-th route
-                    for(int j=0;j<path.size();j++){
-                        HashMap<String,String> point = path.get(j);
+                // Fetching i-th route
+                List<HashMap<String, String>> path = result.get(i);
 
-                        double lat = Double.parseDouble(point.get("lat"));
-                        double lng = Double.parseDouble(point.get("lng"));
-                        LatLng position = new LatLng(lat, lng);
+                // Fetching all the points in i-th route
+                for(int j=0;j<path.size();j++){
+                    HashMap<String,String> point = path.get(j);
 
-                        points.add(position);
-                    }
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat, lng);
 
-                    // Adding all the points in the route to LineOptions
-                    lineOptions.addAll(points);
-                    lineOptions.width(16);
-                    lineOptions.color(Color.parseColor("#2196F3")).geodesic(true).zIndex(8);
+                    points.add(position);
                 }
 
-                // Drawing polyline in the Google Map for the i-th route
-                if(points.size()!=0)mMap.addPolyline(lineOptions);
-                //mMap.addPolyline(lineOptions);
+                // Adding all the points in the route to LineOptions
+                lineOptions.addAll(points);
+                lineOptions.width(16);
+                lineOptions.color(Color.parseColor("#2196F3")).geodesic(true).zIndex(8);
             }
+
+            // Drawing polyline in the Google Map for the i-th route
+            mMap.addPolyline(lineOptions);
         }
     }
+        }
+
 
 
