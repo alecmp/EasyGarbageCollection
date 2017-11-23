@@ -3,7 +3,6 @@ package com.alessandro.easygarbagecollection;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -28,7 +27,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
                 break;
             case 1:
-                fragment = new BlankFragment();
+                fragment = new ListFragment();
                 break;
             default:
                 break;

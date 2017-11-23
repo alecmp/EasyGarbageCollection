@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -18,26 +17,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
-public class BlankFragment extends Fragment {
-
+public class ListFragment extends Fragment {
 
     DatabaseReference mRef;
     FirebaseRecyclerAdapter<TrashCan, TrashCanViewHolder> mAdapter;
     protected static final Query mQuery =
-            FirebaseDatabase.getInstance().getReference().limitToLast(50);
+            FirebaseDatabase.getInstance().getReference().child("Navigation").limitToLast(50);
     ArrayList<TrashCan> trashCanArrayList;
     protected RecyclerView mRecyclerView;
     protected RecyclerView.LayoutManager mLayoutManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("list ", "ENTRATOOOOO " );
-
     }
 
 
@@ -65,7 +58,6 @@ public class BlankFragment extends Fragment {
                             trashCanArrayList.add(trashCan);
                         }
 
-
                     }
 
                     @Override
@@ -88,14 +80,13 @@ public class BlankFragment extends Fragment {
         mAdapter = new FirebaseRecyclerAdapter<TrashCan, TrashCanViewHolder>(options) {
             @Override
             public TrashCanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                Log.d("ENTRATO IN  ", "onCreateViewHolder ");
                 return new TrashCanViewHolder(LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.trashcan_item, parent, false));
             }
 
             @Override
             protected void onBindViewHolder(TrashCanViewHolder holder, int position, TrashCan model) {
-                Log.d("ENTRATO IN  ", "onbindviewholder ");
+                Log.w("ONBIND", ":"+model.getCode());
                 holder.bind(model);
 
 
