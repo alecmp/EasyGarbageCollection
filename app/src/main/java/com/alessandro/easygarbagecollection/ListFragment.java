@@ -67,9 +67,9 @@ public class ListFragment extends Fragment {
                     }
                 });
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
+      /*  DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);*/
 
 
         return rootView;
@@ -87,15 +87,12 @@ public class ListFragment extends Fragment {
             @Override
             public TrashCanViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 return new TrashCanViewHolder(LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.trashcan_item, parent, false));
+                        .inflate(R.layout.trashcan_item, parent, false), getContext());
             }
 
             @Override
             protected void onBindViewHolder(TrashCanViewHolder holder, int position, TrashCan model) {
-                Log.w("ONBIND", ":"+model.getCode());
                 holder.bind(model);
-
-
             }
         } ;
 
