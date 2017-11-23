@@ -13,5 +13,26 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_blank">blankActivity</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_reset_password">ResetPassword</string>
+
+
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="email">Email</string>
+    <string name="fullname">Nome completo</string>
+    <string name="minimum_password">Password troppo corta, deve contenere almeno 6 caratteri!</string>
+    <string name="auth_failed">Autenticazione non riuscita, controlla email e password o registrati</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_link_to_register">Non sei ancora membro? Registrati a DIBapp ora!</string>
+    <string name="btn_link_to_login">Sei già registrato? Effettua il login!</string>
+    <string name="btn_forgot_password">Password dimenticata?</string>
+    <string name="btn_reset_password">Reimposta Password</string>
+    <string name="btn_back"><![CDATA[<< Indietro]]></string>
+    <string name="lbl_forgot_password">Password dimenticata?</string>
+    <string name="forgot_password_msg">Inserisci l\'indirizzo email usato per registrarti e riceverai le istruzioni per reimpostare la password.</string>
+
+
 
 </resources>

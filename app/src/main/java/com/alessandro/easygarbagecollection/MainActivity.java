@@ -1,5 +1,8 @@
 package com.alessandro.easygarbagecollection;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,37 +15,134 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.alessandro.easygarbagecollection.Auth.Signup;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static Toolbar toolbar;
+    FirebaseUser mUser;
+    private String userId;
+    private Uri mPhotoUrl;
+    ActionBarDrawerToggle toggle;
+    DrawerLayout drawer;
+    private SharedPreferences pref;
+    private static final String SHARED_PREFERENCES_TYPE = "Account";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+
+        mUser = FirebaseAuth.getInstance().getCurrentUser();
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(bundle.getString("fullname"))
+                    .build();
+            user.updateProfile(profileUpdates);
+
+
+        }
+
+        String fullName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        if (fullName == null) fullName = Signup.getFullname(); //caso di registrazione
+        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        userId = mUser.getUid();
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View header = navigationView.getHeaderView(0);
+
+        TextView nav_fullname = (TextView) header.findViewById(R.id.nav_fullname);
+        nav_fullname.setText(fullName);
+        TextView nav_email = (TextView) header.findViewById(R.id.nav_email);
+        nav_email.setText(userEmail);
+        final ImageView profile = (ImageView) header.findViewById(R.id.user_profile_photo);
+
+
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+            public void onDrawerOpened(View drawerView) {
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+                mPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/dibapp-b8fda.appspot.com/o/profile_icon.png?alt=media&token=cf3742c4-acb6-4c2d-b2ae-a516569aa082");
+                if (mUser != null && mUser.getPhotoUrl() != null) {
+                    mPhotoUrl = mUser.getPhotoUrl();
+                }
+
+                pref = getSharedPreferences(SHARED_PREFERENCES_TYPE, MODE_PRIVATE);
+                String localStr = pref.getString(userId, null);
+                if (localStr != null) {
+                    Uri localUrl = Uri.parse(localStr);
+                    if (localUrl != mPhotoUrl) {
+                        mPhotoUrl = localUrl;
+
+
+                    }
+
+                }
+                RequestOptions requestOptions = new RequestOptions();
+                requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
+                Glide.with(getApplicationContext())
+                        .load(mPhotoUrl)
+                        .apply(requestOptions)
+                        //.skipMemoryCache(true)
+                        .into(profile);
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        };
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+
+
+
+
+
+
+
+/*
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);*/
+
+
+        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();*/
+
+       // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         ViewPager vp_pages = (ViewPager) findViewById(R.id.vp_pages);
