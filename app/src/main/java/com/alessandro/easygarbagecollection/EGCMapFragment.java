@@ -73,6 +73,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d("Background Task", "ON CHILD ADDED");
                 mMap.clear();
                 markerPoints = new ArrayList<>();
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren()){

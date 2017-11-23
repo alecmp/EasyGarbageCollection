@@ -32,12 +32,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
     public static Toolbar toolbar;
+    DrawerLayout drawer;
     FirebaseUser mUser;
     private String userId;
     private Uri mPhotoUrl;
     ActionBarDrawerToggle toggle;
-    DrawerLayout drawer;
     private SharedPreferences pref;
     private static final String SHARED_PREFERENCES_TYPE = "Account";
 
@@ -65,9 +66,13 @@ public class MainActivity extends AppCompatActivity
         String fullName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         if (fullName == null) fullName = Signup.getFullname(); //caso di registrazione
         String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        userId = mUser.getUid();
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        userId = mUser.getUid();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
@@ -143,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();*/
 
        // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+      //  navigationView.setNavigationItemSelectedListener(this);
 
         ViewPager vp_pages = (ViewPager) findViewById(R.id.vp_pages);
         PagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
