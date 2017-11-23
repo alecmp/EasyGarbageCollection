@@ -1,5 +1,6 @@
 package com.alessandro.easygarbagecollection;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -91,12 +92,12 @@ public class MainActivity extends AppCompatActivity
             public void onDrawerOpened(View drawerView) {
 
 
-                mPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/dibapp-b8fda.appspot.com/o/profile_icon.png?alt=media&token=cf3742c4-acb6-4c2d-b2ae-a516569aa082");
+                mPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/easy-garbage-collection-c4f8b.appspot.com/o/avatardefault.png?alt=media&token=8c68725a-a21d-4c38-9c99-88b5b825a8b3");
                 if (mUser != null && mUser.getPhotoUrl() != null) {
                     mPhotoUrl = mUser.getPhotoUrl();
                 }
 
-                pref = getSharedPreferences(SHARED_PREFERENCES_TYPE, MODE_PRIVATE);
+               pref = getSharedPreferences(SHARED_PREFERENCES_TYPE, MODE_PRIVATE);
                 String localStr = pref.getString(userId, null);
                 if (localStr != null) {
                     Uri localUrl = Uri.parse(localStr);
@@ -107,6 +108,8 @@ public class MainActivity extends AppCompatActivity
                     }
 
                 }
+
+
                 RequestOptions requestOptions = new RequestOptions();
                 requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
                 Glide.with(getApplicationContext())
@@ -129,33 +132,13 @@ public class MainActivity extends AppCompatActivity
 
 
 
-
-
-
-
-
-
-/*
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);*/
-
-
-        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();*/
-
-       // NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-      //  navigationView.setNavigationItemSelectedListener(this);
-
         ViewPager vp_pages = (ViewPager) findViewById(R.id.vp_pages);
         PagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         vp_pages.setAdapter(pagerAdapter);
 
         TabLayout tbl_pages = (TabLayout) findViewById(R.id.tbl_pages);
         tbl_pages.setupWithViewPager(vp_pages);
+
     }
 
 
