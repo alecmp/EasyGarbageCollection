@@ -4,19 +4,19 @@ package com.alessandro.easygarbagecollection;
  * Created by alessandro.campanell on 20/11/2017.
  */
 
-public class FirebaseMarker {
+public class TrashCan {
 
-    public String code;
-    public double fillingLevel;
-    public double latitude;
-    public double longitude;
+    private String code;
+    private double fillingLevel;
+    private double latitude;
+    private double longitude;
 
 
     //required empty constructor
-    public FirebaseMarker() {
+    public TrashCan() {
     }
 
-    public FirebaseMarker(String code, double fillingLevel, double latitude, double longitude) {
+    public TrashCan(String code, double fillingLevel, double latitude, double longitude) {
         this.code = code;
         this.fillingLevel = fillingLevel;
         this.latitude = latitude;

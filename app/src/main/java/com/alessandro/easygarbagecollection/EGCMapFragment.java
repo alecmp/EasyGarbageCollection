@@ -1,10 +1,10 @@
 package com.alessandro.easygarbagecollection;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,10 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,7 +32,6 @@ import java.util.List;
 public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private FirebaseDatabase mDatabase;
     private DatabaseReference mRef;
     private ArrayList<LatLng> markerPoints;
     private static final Double TRESHOLD = 25.0;
@@ -44,14 +40,13 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getMapAsync(this);
-        mDatabase= FirebaseDatabase.getInstance();
         mRef = FirebaseDatabase.getInstance().getReference();
-        markerPoints = new ArrayList<LatLng>();
+        markerPoints = new ArrayList<>();
 
-       /*  FirebaseMarker marker = new FirebaseMarker("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
-        FirebaseMarker marker2 = new FirebaseMarker("secondo", "Campanello", 41.104069,16.8785068, "20/11/2017", "02/07/2016" );
-        FirebaseMarker marker3 = new FirebaseMarker("terzo", "Campanello", 41.107092,16.8792508, "20/11/2017", "02/07/2016" );
-        FirebaseMarker marker4 = new FirebaseMarker("end", "Campanello", 41.212305,16.9817258, "20/11/2017", "02/07/2016" );
+       /*  TrashCan marker = new TrashCan("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
+        TrashCan marker2 = new TrashCan("secondo", "Campanello", 41.104069,16.8785068, "20/11/2017", "02/07/2016" );
+        TrashCan marker3 = new TrashCan("terzo", "Campanello", 41.107092,16.8792508, "20/11/2017", "02/07/2016" );
+        TrashCan marker4 = new TrashCan("end", "Campanello", 41.212305,16.9817258, "20/11/2017", "02/07/2016" );
         mRef.push().setValue(marker);
         Log.d("ADebugTag", "Value: " + "aggiunto");
         mRef.push().setValue(marker2);
@@ -72,84 +67,40 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("ADebugTag", "Value: " + "entrato");
         mMap = googleMap;
-        mMap.moveCamera( CameraUpdateFactory.newLatLngZoom(new LatLng(41.1101687,16.8788819) , 15.0f) );
-
-
-       /* mRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mMap.clear();
-                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
-                    FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
-                    Double latitude = marker.getLatitude();
-                    Double longitude = marker.getLongitude();
-                    String code = marker.getCode();
-                    Double fillingLevel = marker.getFillingLevel();
-                    LatLng location = new LatLng(latitude,longitude);
-                    Log.d("ADebugTag", "Value: " + location);
-
-
-                    //select Marker color according with filling level. If >25 adds it to markerPoints
-                    if(fillingLevel > 25.0 ){
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                        markerPoints.add(location);
-                    }
-                    else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                }
-                fill();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-
-           *//* public void fill(){
-                LatLng origin = markerPoints.get(0);
-                LatLng dest = markerPoints.get(markerPoints.size()-1);
-                String url = getDirectionsUrl(origin, dest);
-                DownloadTask downloadTask = new DownloadTask();
-                // Start downloading json data from Google Directions API
-                downloadTask.execute(url);
-            }*//*
-        });
-*/
-
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.1101687, 16.8788819), 15.0f));
         mRef.addChildEventListener(new ChildEventListener() {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d("ADebugTag", "ON CHILD ADDED");
                 mMap.clear();
-                markerPoints = new ArrayList<LatLng>();
-                Log.d("size iniziale", "is" + markerPoints.size());
-                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
-                    FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
-                    Double latitude = marker.getLatitude();
-                    Double longitude = marker.getLongitude();
-                    String code = marker.getCode();
-                    Double fillingLevel = marker.getFillingLevel();
+                markerPoints = new ArrayList<>();
+                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren()){
+                    TrashCan marker = markerSnapshot.getValue(TrashCan.class);
+                    Double latitude = null;
+                    Double longitude = null;
+                    String code = null;
+                    Double fillingLevel = null;
+                    if (marker != null) {
+                        latitude = marker.getLatitude();
+                        longitude = marker.getLongitude();
+                        code = marker.getCode();
+                        fillingLevel = marker.getFillingLevel();
+                    }
+
                     LatLng location = new LatLng(latitude,longitude);
 
                     //select Marker color according with filling level. If >25 adds it to markerPoints
-                        if(fillingLevel > TRESHOLD ){
-                            mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                    if (fillingLevel > TRESHOLD) {
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                         markerPoints.add(location);
-                         }
-                          else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        markerPoints.add(location);
+                    } else
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
-                Log.d("size finale", "is" + markerPoints.size());
                 LatLng origin = markerPoints.get(0);
                 LatLng dest = markerPoints.get(1);
-                Log.d("size finale", "is" + markerPoints.get(1).toString());
                 String url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
                 // Start downloading json data from Google Directions API
@@ -160,37 +111,36 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d("ADebugTag", "ON CHILD CHANGED");
                 mMap.clear();
-                markerPoints = new ArrayList<LatLng>();
-                Log.d("size iniziale", "is" + markerPoints.size());
-                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren() ){
-                    FirebaseMarker marker = markerSnapshot.getValue(FirebaseMarker.class);
-                    Double latitude = marker.getLatitude();
-                    Double longitude = marker.getLongitude();
-                    String code = marker.getCode();
-                    Double fillingLevel = marker.getFillingLevel();
-                    LatLng location = new LatLng(latitude,longitude);
-
+                markerPoints = new ArrayList<>();
+                for (DataSnapshot markerSnapshot : dataSnapshot.getChildren()) {
+                    TrashCan marker = markerSnapshot.getValue(TrashCan.class);
+                    Double latitude = null;
+                    Double longitude = null;
+                    String code = null;
+                    Double fillingLevel = null;
+                    if (marker != null) {
+                        latitude = marker.getLatitude();
+                        longitude = marker.getLongitude();
+                        code = marker.getCode();
+                        fillingLevel = marker.getFillingLevel();
+                    }
+                    LatLng location = new LatLng(latitude, longitude);
                     //select Marker color according with filling level. If >25 adds it to markerPoints
-                    if(fillingLevel > TRESHOLD ){
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
+                    if (fillingLevel > TRESHOLD) {
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                         markerPoints.add(location);
-                    }
-                    else mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: "+fillingLevel + "%").icon(BitmapDescriptorFactory
-                            .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    } else
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
+                                .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
-                Log.d("size finale", "is" + markerPoints.size());
                 LatLng origin = markerPoints.get(0);
-                Log.d("last element", "is" + markerPoints.get(1).toString());
                 LatLng dest = markerPoints.get(1);
                 String url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
                 // Start downloading json data from Google Directions API
                 downloadTask.execute(url);
-
-
             }
 
             @Override
@@ -215,84 +165,79 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
     }
 
 
-    private String getDirectionsUrl(LatLng origin,LatLng dest){
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
-
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
-
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         // Sensor enabled
         String sensor = "sensor=false";
 
         // Waypoints
-        String waypoints = "";
+        StringBuilder waypoints = new StringBuilder();
         //for(int i=2;i<markerPoints.size();i++){
-        for(int i=2;i<markerPoints.size();i++){
-            LatLng point  = (LatLng) markerPoints.get(i);
-            Log.d("waypoint", "is " + markerPoints.get(i));
-            if(i==2)
-                waypoints = "waypoints=";
-            waypoints += point.latitude + "," + point.longitude + "|";
+        for (int i = 2; i < markerPoints.size(); i++) {
+            LatLng point = markerPoints.get(i);
+            if (i == 2)
+                waypoints = new StringBuilder("waypoints=");
+            waypoints.append(point.latitude).append(",").append(point.longitude).append("|");
         }
 
         // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor+"&"+waypoints;
-
+        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + waypoints;
         // Output format
         String output = "json";
-
         // Building the url to the web service
         // String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         Log.d("url", "is " + url);
         return url;
     }
 
 
-
-    /** A method to download json data from url */
+    /**
+     * A method to download json data from url
+     */
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
-        try{
+        try {
             URL url = new URL(strUrl);
 
             // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
             // Connecting to url
             urlConnection.connect();
-
             // Reading data from url
             iStream = urlConnection.getInputStream();
-
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while( ( line = br.readLine()) != null){
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
             data = sb.toString();
-
             br.close();
 
-        }catch(Exception e){
-            Log.d("Exception while downlo", e.toString());
-        }finally{
-            iStream.close();
-            urlConnection.disconnect();
+        } catch (Exception e) {
+            Log.d("Exception w download", e.toString());
+        } finally {
+            if (iStream != null) {
+                iStream.close();
+            }
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
         }
         return data;
     }
 
 
     // Fetches data from url passed
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
         // Downloading data in non-ui thread
@@ -302,11 +247,11 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             // For storing data from web service
             String data = "";
 
-            try{
+            try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
             }
             return data;
         }
@@ -325,8 +270,11 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
     }
 
 
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    @SuppressLint("StaticFieldLeak")
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
         // Parsing the data in non-ui thread
         @Override
@@ -335,13 +283,13 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
 
-            try{
+            try {
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
 
                 // Starts parsing data
                 routes = parser.parse(jObject);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return routes;
@@ -351,20 +299,20 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
 
-            ArrayList<LatLng> points = null;
+            ArrayList<LatLng> points;
             PolylineOptions lineOptions = null;
 
             // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
-                points = new ArrayList<LatLng>();
+            for (int i = 0; i < result.size(); i++) {
+                points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
                 // Fetching i-th route
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
@@ -380,10 +328,7 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
             }
 
             // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
+            if(lineOptions!= null) mMap.addPolyline(lineOptions);
         }
     }
-        }
-
-
-
+}
