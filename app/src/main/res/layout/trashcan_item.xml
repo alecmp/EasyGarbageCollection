@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:gravity="left"
-                android:paddingTop="10dp"
+                android:paddingTop="11dp"
                 android:paddingBottom="10dp"
                 android:text="Ultimo esame superato" />
         </LinearLayout>
