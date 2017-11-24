@@ -1,10 +1,12 @@
 package com.alessandro.easygarbagecollection;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,11 +28,13 @@ import java.util.Locale;
 public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
     private final TextView mCode,mFillingLevel, mAddress;
+    private final ImageView mFillingLevelIcon;
     Double longitude;
     Double latitude;
     private Context mContext;
     private GoogleMap mMap;
     private MapView map;
+    private static final Double TRESHOLD = 25.0;
 
     public TrashCanViewHolder(View itemView, Context context) {
         super(itemView);
@@ -38,6 +42,7 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMa
         this.mCode = itemView.findViewById(R.id.code);
         this.mFillingLevel = itemView.findViewById(R.id.fillingLevel);
         this.mAddress = itemView.findViewById(R.id.address);
+        this.mFillingLevelIcon = itemView.findViewById(R.id.filling_level_icon);
         this.map = itemView.findViewById(R.id.mapImageView);
 
         if (map != null)
@@ -52,6 +57,8 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMa
     public void bind(TrashCan trashCan) {
         setCode(trashCan.getCode());
         setFillingLevel(trashCan.getFillingLevel());
+        if(trashCan.getFillingLevel()>TRESHOLD) mFillingLevelIcon.setColorFilter(Color.RED);
+        else mFillingLevelIcon.setColorFilter(Color.GREEN);
 
         //trasforms lat and lang into address
         longitude = trashCan.getLongitude();

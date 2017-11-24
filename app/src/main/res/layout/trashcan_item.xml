@@ -8,19 +8,19 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
 
         <TextView
             android:id="@+id/code"
-            android:paddingLeft="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
             android:text="nome esame"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="#040404"
@@ -32,32 +32,32 @@
             android:background="?android:attr/listDivider" />
 
         <!-- riga indirizzo -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:id="@+id/lm"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:id="@+id/location"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="10dp"
-            android:src="@drawable/ic_location" />
-        <TextView
-            android:id="@+id/address"
+        <LinearLayout
+            android:id="@+id/lm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:gravity="left"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <ImageView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_location" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="left"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" />
+        </LinearLayout>
 
         <!-- fine riga indirizzo -->
-
-
 
 
         <View
@@ -66,35 +66,33 @@
             android:background="?android:attr/listDivider" />
 
 
-
         <!-- riga livello -->
         <LinearLayout
-            android:layout_width="match_parent"
             android:id="@+id/lev"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
+
             <ImageView
+                android:id="@+id/filling_level_icon"
                 android:layout_width="wrap_content"
-                android:id="@+id/level_icon"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
                 android:src="@drawable/ic_filling_level" />
+
             <TextView
                 android:id="@+id/fillingLevel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:gravity="left"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp" />
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" />
         </LinearLayout>
 
         <!-- fine riga livellio -->
-
-
-
 
 
         <com.google.android.gms.maps.MapView xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -107,27 +105,22 @@
             map:mapType="normal" />
 
 
-
-
-
-
-
         <!-- riga ultimo aggiornamento -->
         <LinearLayout
-            android:layout_width="match_parent"
             android:id="@+id/ll"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <ImageView
-                android:layout_width="wrap_content"
                 android:id="@+id/clock"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:paddingLeft="10dp"
 
-            android:src="@drawable/ic_clock" />
+                android:src="@drawable/ic_clock" />
 
             <TextView
                 android:id="@+id/last_update"
@@ -135,12 +128,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:gravity="left"
-                android:paddingTop="11dp"
                 android:paddingBottom="10dp"
+                android:paddingTop="10dp"
                 android:text="Ultimo esame superato" />
         </LinearLayout>
         <!-- riga ultimo aggiornamento -->
-
 
 
     </LinearLayout>
