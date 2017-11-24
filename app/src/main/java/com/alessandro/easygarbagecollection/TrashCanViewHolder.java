@@ -1,28 +1,33 @@
 package com.alessandro.easygarbagecollection;
 
-import android.app.Application;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 
 /**
  * Created by alessandro.campanell on 23/11/2017.
  */
 
-public class TrashCanViewHolder  extends RecyclerView.ViewHolder {
+public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
     private final TextView mCode,mFillingLevel, mAddress;
     private Context mContext;
+    private GoogleMap mMap;
+    private MapView map;
 
     public TrashCanViewHolder(View itemView, Context context) {
         super(itemView);
@@ -30,6 +35,15 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder {
         this.mCode = itemView.findViewById(R.id.code);
         this.mFillingLevel = itemView.findViewById(R.id.fillingLevel);
         this.mAddress = itemView.findViewById(R.id.address);
+        this.map = itemView.findViewById(R.id.mapImageView);
+
+        if (map != null)
+        {
+            map.onCreate(null);
+            map.onResume();
+            map.getMapAsync(this);
+        }
+
     }
 
     public void bind(TrashCan trashCan) {
@@ -68,4 +82,13 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder {
     }
 
     public void setAddress (String address){ mAddress.setText(address);}
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        //initialize the Google Maps Android API if features need to be used before obtaining a map
+        MapsInitializer.initialize(mContext);
+        mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.1101687, 16.8788819), 15.0f));
+
+    }
 }
