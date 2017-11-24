@@ -6,13 +6,14 @@ import android.location.Geocoder;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,6 +26,8 @@ import java.util.Locale;
 public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
     private final TextView mCode,mFillingLevel, mAddress;
+    Double longitude;
+    Double latitude;
     private Context mContext;
     private GoogleMap mMap;
     private MapView map;
@@ -51,8 +54,8 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMa
         setFillingLevel(trashCan.getFillingLevel());
 
         //trasforms lat and lang into address
-        Double longitude = trashCan.getLongitude();
-        Double latitude = trashCan.getLatitude();
+        longitude = trashCan.getLongitude();
+        latitude = trashCan.getLatitude();
 
         Geocoder geocoder= new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
@@ -66,10 +69,6 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMa
         setAddress(address);
 
         //--------------------------------------------------------
-
-
-
-
 
     }
 
@@ -85,10 +84,13 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMa
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        LatLng location = new LatLng(latitude,longitude);
         //initialize the Google Maps Android API if features need to be used before obtaining a map
         MapsInitializer.initialize(mContext);
         mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(41.1101687, 16.8788819), 15.0f));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 17.0f));
+        mMap.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
     }
 }
