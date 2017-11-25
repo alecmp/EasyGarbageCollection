@@ -5,9 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,17 +56,17 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<>();
-        /*mBottomSheet = v.findViewById(R.id.bottom_sheet);
+        mBottomSheet = v.findViewById(R.id.bottom_sheet);
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
         mBottomSheetBehavior.setPeekHeight(200);
         mBottomSheetBehavior.setHideable(false);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-*/
 
 
 
 
-        AppBarLayout appBarLayout = (AppBarLayout) v.findViewById(R.id.appbar);
+
+        /*AppBarLayout appBarLayout = (AppBarLayout) v.findViewById(R.id.appbar);
         CoordinatorLayout.LayoutParams params =
                 (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
         AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
@@ -78,7 +76,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 return true;
             }
         });
-        params.setBehavior(behavior);
+        params.setBehavior(behavior);*/
 
 
 
