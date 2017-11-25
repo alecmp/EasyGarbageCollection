@@ -4,7 +4,16 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -18,7 +27,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,21 +40,63 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCallback {
+public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private DatabaseReference mRef;
     private ArrayList<LatLng> markerPoints;
     private static final Double TRESHOLD = 25.0;
+    private  BottomSheetBehavior mBottomSheetBehavior;
+    private View mBottomSheet;
+
+
 
     @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_egcmap, container, false);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapview);
+        mapFragment.getMapAsync(this);
+        mRef = FirebaseDatabase.getInstance().getReference();
+        markerPoints = new ArrayList<>();
+        /*mBottomSheet = v.findViewById(R.id.bottom_sheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBottomSheetBehavior.setPeekHeight(200);
+        mBottomSheetBehavior.setHideable(false);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+*/
+
+
+
+
+        AppBarLayout appBarLayout = (AppBarLayout) v.findViewById(R.id.appbar);
+        CoordinatorLayout.LayoutParams params =
+                (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
+        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+            @Override
+            public boolean canDrag(AppBarLayout appBarLayout) {
+                return true;
+            }
+        });
+        params.setBehavior(behavior);
+
+
+
+
+        return  v;
+    }
+
+
+
+
+    /*@Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getMapAsync(this);
         mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<>();
 
-       /*  TrashCan marker = new TrashCan("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
+       *//*  TrashCan marker = new TrashCan("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
         TrashCan marker2 = new TrashCan("secondo", "Campanello", 41.104069,16.8785068, "20/11/2017", "02/07/2016" );
         TrashCan marker3 = new TrashCan("terzo", "Campanello", 41.107092,16.8792508, "20/11/2017", "02/07/2016" );
         TrashCan marker4 = new TrashCan("end", "Campanello", 41.212305,16.9817258, "20/11/2017", "02/07/2016" );
@@ -51,9 +104,9 @@ public class EGCMapFragment extends SupportMapFragment implements OnMapReadyCall
         Log.d("ADebugTag", "Value: " + "aggiunto");
         mRef.push().setValue(marker2);
         mRef.push().setValue(marker3);
-        mRef.push().setValue(marker4);*/
+        mRef.push().setValue(marker4);*//*
 
-    }
+    }*/
 
 
     /**
