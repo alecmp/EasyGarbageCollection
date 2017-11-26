@@ -5,7 +5,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,9 +44,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
     private DatabaseReference mRef;
     private ArrayList<LatLng> markerPoints;
     private static final Double TRESHOLD = 25.0;
-    private  BottomSheetBehavior mBottomSheetBehavior;
-    private View mBottomSheet;
-
+    FloatingActionButton fab;
 
 
     @Override
@@ -56,31 +54,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<>();
-        mBottomSheet = v.findViewById(R.id.bottom_sheet);
-        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBottomSheetBehavior.setPeekHeight(200);
-        mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-
-
-
-
-
-        /*AppBarLayout appBarLayout = (AppBarLayout) v.findViewById(R.id.appbar);
-        CoordinatorLayout.LayoutParams params =
-                (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-        AppBarLayout.Behavior behavior = new AppBarLayout.Behavior();
-        behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-            @Override
-            public boolean canDrag(AppBarLayout appBarLayout) {
-                return true;
-            }
-        });
-        params.setBehavior(behavior);*/
-
-
-
-
+        fab = v.findViewById(R.id.fab);
         return  v;
     }
 
@@ -344,12 +318,14 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             return routes;
         }
 
         // Executes in UI thread, after the parsing process
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+
 
             ArrayList<LatLng> points;
             PolylineOptions lineOptions = null;

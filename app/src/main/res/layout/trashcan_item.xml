@@ -11,20 +11,35 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- riga codice -->
+
+    <LinearLayout
+        android:id="@+id/ls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <ImageView
+            android:id="@+id/code_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_trash_can" />
 
         <TextView
             android:id="@+id/code"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:fontFamily="sans-serif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="left"
             android:paddingBottom="10dp"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:text="nome esame"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="#040404"
-            android:textSize="16sp" />
+            android:paddingTop="10dp" />
+
+    </LinearLayout>
+
+        <!-- fine riga codice -->
 
         <View
             android:layout_width="match_parent"
@@ -40,7 +55,7 @@
             android:weightSum="2">
 
             <ImageView
-                android:id="@+id/location"
+                android:id="@+id/address_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"

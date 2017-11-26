@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
-
-    <!--<FrameLayout
-        android:id="@+id/map_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        app:layout_anchor="@+id/list_container"
-        app:layout_behavior=".CollapseBehavior">-->
 
         <fragment
             android:id="@+id/mapview"
@@ -21,106 +14,12 @@
             app:layout_behavior=".CollapseBehavior"
             class="com.google.android.gms.maps.SupportMapFragment" />
 
-   <!-- </FrameLayout>-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        app:layout_anchor="@+id/mapview"
+        app:layout_anchorGravity="bottom|end" />
 
-
-
-    <android.support.v4.widget.NestedScrollView android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent" android:layout_height="100dp"
-        android:background="@android:color/white" android:clipToPadding="true"
-        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
-
-        <TextView android:id="@+id/detail_name" android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_margin="25dp"
-            android:layout_weight="3" android:gravity="center_vertical"
-            android:textAppearance="?android:textAppearanceLarge" />
-
-    </android.support.v4.widget.NestedScrollView>
 </android.support.design.widget.CoordinatorLayout>
-
-
-<!--
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-
-
-
-
-
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        android:layout_width="match_parent"
-        android:layout_height="256dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:fitsSystemWindows="true">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
-
-
-
-
-
-
-
-
-<fragment
-    android:id="@+id/mapview"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.alessandro.easygarbagecollection.EGCMapFragment" />
-
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" />
-
-
-
-    </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-
-
-
-
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/bottom_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/white"
-        android:clipToPadding="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Info"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-
-    </android.support.v4.widget.NestedScrollView>
-
-
-</android.support.design.widget.CoordinatorLayout>-->
