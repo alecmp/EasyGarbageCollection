@@ -1,7 +1,9 @@
 package com.alessandro.easygarbagecollection;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -45,6 +47,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<LatLng> markerPoints;
     private static final Double TRESHOLD = 25.0;
     FloatingActionButton fab;
+    String url = null;
 
 
     @Override
@@ -55,7 +58,28 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<>();
         fab = v.findViewById(R.id.fab);
+
+
+
+
+
+
+
+
+
+
+
+
+
         return  v;
+
+
+
+
+
+
+
+
     }
 
 
@@ -103,10 +127,10 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 markerPoints = new ArrayList<>();
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren()){
                     TrashCan marker = markerSnapshot.getValue(TrashCan.class);
-                    Double latitude = null;
-                    Double longitude = null;
+                    double latitude = 0;
+                    double longitude = 0;
                     String code = null;
-                    Double fillingLevel = null;
+                    double fillingLevel = 0;
                     if (marker != null) {
                         latitude = marker.getLatitude();
                         longitude = marker.getLongitude();
@@ -127,7 +151,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 LatLng origin = markerPoints.get(0);
                 LatLng dest = markerPoints.get(1);
-                String url = getDirectionsUrl(origin, dest);
+                url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
                 // Start downloading json data from Google Directions API
                 downloadTask.execute(url);
@@ -141,10 +165,10 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 markerPoints = new ArrayList<>();
                 for (DataSnapshot markerSnapshot : dataSnapshot.getChildren()) {
                     TrashCan marker = markerSnapshot.getValue(TrashCan.class);
-                    Double latitude = null;
-                    Double longitude = null;
+                    double latitude = 0;
+                    double longitude = 0;
                     String code = null;
-                    Double fillingLevel = null;
+                    double fillingLevel = 0;
                     if (marker != null) {
                         latitude = marker.getLatitude();
                         longitude = marker.getLongitude();
@@ -163,7 +187,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 }
                 LatLng origin = markerPoints.get(0);
                 LatLng dest = markerPoints.get(1);
-                String url = getDirectionsUrl(origin, dest);
+                url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
                 // Start downloading json data from Google Directions API
                 downloadTask.execute(url);
@@ -187,7 +211,17 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
 
         });
 
-
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(url != null) {
+                    String newUrl = url.replaceAll("https://maps.googleapis.com/maps/api/directions/json\\?", "https://www.google.com/maps/dir/?api=1&");
+                    Log.w("URIIII", " " + newUrl);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newUrl));
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
 
@@ -220,6 +254,8 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         Log.d("url", "is " + url);
         return url;
     }
+
+
 
 
     /**

@@ -27,8 +27,6 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth auth;
     private ProgressBar progressBar;
     private Button btnSignup, btnLogin, btnReset;
-    AnimationDrawable animationDrawable;
-    CoordinatorLayout coordinatorLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -23,30 +24,28 @@ import java.util.Locale;
 
 /**
  * Created by alessandro.campanell on 23/11/2017.
+ * TrashCanViewHolder
  */
 
-public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMapReadyCallback {
+public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
-    private final TextView mCode,mFillingLevel, mAddress;
+    private final TextView mCode, mFillingLevel, mAddress;
     private final ImageView mFillingLevelIcon;
-    Double longitude;
-    Double latitude;
+    private Double longitude;
+    private Double latitude;
     private Context mContext;
-    private GoogleMap mMap;
-    private MapView map;
     private static final Double TRESHOLD = 25.0;
 
-    public TrashCanViewHolder(View itemView, Context context) {
+    TrashCanViewHolder(View itemView, Context context) {
         super(itemView);
         this.mContext = context;
         this.mCode = itemView.findViewById(R.id.code);
         this.mFillingLevel = itemView.findViewById(R.id.fillingLevel);
         this.mAddress = itemView.findViewById(R.id.address);
         this.mFillingLevelIcon = itemView.findViewById(R.id.filling_level_icon);
-        this.map = itemView.findViewById(R.id.mapImageView);
+        MapView map = itemView.findViewById(R.id.mapImageView);
 
-        if (map != null)
-        {
+        if (map != null) {
             map.onCreate(null);
             map.onResume();
             map.getMapAsync(this);
@@ -54,49 +53,46 @@ public class TrashCanViewHolder  extends RecyclerView.ViewHolder implements OnMa
 
     }
 
-    public void bind(TrashCan trashCan) {
+    void bind(TrashCan trashCan) {
         setCode(trashCan.getCode());
         setFillingLevel(trashCan.getFillingLevel());
-        if(trashCan.getFillingLevel()>TRESHOLD) mFillingLevelIcon.setColorFilter(Color.RED);
+        if (trashCan.getFillingLevel() > TRESHOLD) mFillingLevelIcon.setColorFilter(Color.RED);
         else mFillingLevelIcon.setColorFilter(Color.GREEN);
-
-        //trasforms lat and lang into address
         longitude = trashCan.getLongitude();
         latitude = trashCan.getLatitude();
-
-        Geocoder geocoder= new Geocoder(mContext, Locale.getDefault());
+        Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
         List<Address> addresses = null;
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        String address = addresses.get(0).getAddressLine(0);
+        String address = null;
+        if (addresses != null) {
+            address = addresses.get(0).getAddressLine(0);
+        }
         setAddress(address);
-
-        //--------------------------------------------------------
 
     }
 
-    public void setCode(String code) {
+    private void setCode(String code) {
         mCode.setText(code);
     }
 
-    public void setFillingLevel(Double fillingLevel) {
+    private void setFillingLevel(Double fillingLevel) {
         mFillingLevel.setText(String.valueOf(fillingLevel));
     }
 
-    public void setAddress (String address){ mAddress.setText(address);}
+    private void setAddress(String address) {
+        mAddress.setText(address);
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        LatLng location = new LatLng(latitude,longitude);
-        //initialize the Google Maps Android API if features need to be used before obtaining a map
+        LatLng location = new LatLng(latitude, longitude);
         MapsInitializer.initialize(mContext);
-        mMap = googleMap;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude), 17.0f));
-        mMap.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 17.0f));
+        googleMap.addMarker(new MarkerOptions().position(location).icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
 
     }

@@ -2,6 +2,7 @@ package com.alessandro.easygarbagecollection;
 
 /**
  * Created by alessandro.campanell on 20/11/2017.
+ * TrashCan model
  */
 
 public class TrashCan {
@@ -11,11 +12,6 @@ public class TrashCan {
     private double latitude;
     private double longitude;
 
-
-    //required empty constructor
-    public TrashCan() {
-    }
-
     public TrashCan(String code, double fillingLevel, double latitude, double longitude) {
         this.code = code;
         this.fillingLevel = fillingLevel;
@@ -23,36 +19,26 @@ public class TrashCan {
         this.longitude = longitude;
     }
 
+    public TrashCan() {
+    }
 
-    public String getCode() {
+    String getCode() {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
 
-    public double getFillingLevel() {
+    double getFillingLevel() {
         return fillingLevel;
     }
 
-    public void setFillingLevel(double fillingLevel) {
-        this.fillingLevel = fillingLevel;
-    }
 
-    public double getLongitude() {
+    double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
 
-    public double getLatitude() {
+    double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
 }

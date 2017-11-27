@@ -14,14 +14,12 @@
         <!-- riga codice -->
 
     <LinearLayout
-        android:id="@+id/ls"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2">
 
         <ImageView
-            android:id="@+id/code_icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -48,14 +46,12 @@
 
         <!-- riga indirizzo -->
         <LinearLayout
-            android:id="@+id/lm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <ImageView
-                android:id="@+id/address_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -83,7 +79,6 @@
 
         <!-- riga livello -->
         <LinearLayout
-            android:id="@+id/lev"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -122,14 +117,12 @@
 
         <!-- riga ultimo aggiornamento -->
         <LinearLayout
-            android:id="@+id/ll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <ImageView
-                android:id="@+id/clock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -138,7 +131,6 @@
                 android:src="@drawable/ic_clock" />
 
             <TextView
-                android:id="@+id/last_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

@@ -52,7 +52,11 @@
             android:name=".Auth.ResetPassword"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Auth.Signup"></activity>
+
+        <activity android:name=".Auth.Signup"
+        android:label="@string/action_sign_in_short"
+        android:theme="@style/AppTheme.NoActionBar" />
+
     </application>
 
 </manifest>

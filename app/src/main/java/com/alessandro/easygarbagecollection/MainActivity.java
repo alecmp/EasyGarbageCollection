@@ -1,9 +1,8 @@
 package com.alessandro.easygarbagecollection;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
@@ -16,14 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alessandro.easygarbagecollection.Auth.Login;
 import com.alessandro.easygarbagecollection.Auth.Signup;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -31,14 +26,12 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static Toolbar toolbar;
+    public Toolbar toolbar;
     DrawerLayout drawer;
     FirebaseUser mUser;
-    private String userId;
-    private Uri mPhotoUrl;
     ActionBarDrawerToggle toggle;
-    private SharedPreferences pref;
-    private static final String SHARED_PREFERENCES_TYPE = "Account";
+
+
 
 
     @Override
@@ -56,7 +49,9 @@ public class MainActivity extends AppCompatActivity
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(bundle.getString("fullname"))
                     .build();
-            user.updateProfile(profileUpdates);
+            if (user != null) {
+                user.updateProfile(profileUpdates);
+            }
 
 
         }
@@ -65,55 +60,25 @@ public class MainActivity extends AppCompatActivity
         if (fullName == null) fullName = Signup.getFullname(); //caso di registrazione
         String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar =  findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        userId = mUser.getUid();
+        drawer =  findViewById(R.id.drawer_layout);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView =  findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
 
-        TextView nav_fullname = (TextView) header.findViewById(R.id.nav_fullname);
+        TextView nav_fullname =  header.findViewById(R.id.nav_fullname);
         nav_fullname.setText(fullName);
-        TextView nav_email = (TextView) header.findViewById(R.id.nav_email);
+        TextView nav_email =  header.findViewById(R.id.nav_email);
         nav_email.setText(userEmail);
-        final ImageView profile = (ImageView) header.findViewById(R.id.user_profile_photo);
-
 
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
 
             @Override
             public void onDrawerOpened(View drawerView) {
-
-
-                mPhotoUrl = Uri.parse("https://firebasestorage.googleapis.com/v0/b/easy-garbage-collection-c4f8b.appspot.com/o/avatardefault.png?alt=media&token=8c68725a-a21d-4c38-9c99-88b5b825a8b3");
-                if (mUser != null && mUser.getPhotoUrl() != null) {
-                    mPhotoUrl = mUser.getPhotoUrl();
-                }
-
-               pref = getSharedPreferences(SHARED_PREFERENCES_TYPE, MODE_PRIVATE);
-                String localStr = pref.getString(userId, null);
-                if (localStr != null) {
-                    Uri localUrl = Uri.parse(localStr);
-                    if (localUrl != mPhotoUrl) {
-                        mPhotoUrl = localUrl;
-
-
-                    }
-
-                }
-
-
-                RequestOptions requestOptions = new RequestOptions();
-                requestOptions.diskCacheStrategy(DiskCacheStrategy.RESOURCE);
-                Glide.with(getApplicationContext())
-                        .load(mPhotoUrl)
-                        .apply(requestOptions)
-                        //.skipMemoryCache(true)
-                        .into(profile);
 
             }
 
@@ -129,11 +94,11 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        ViewPager vp_pages = (ViewPager) findViewById(R.id.vp_pages);
+        ViewPager vp_pages =  findViewById(R.id.vp_pages);
         PagerAdapter pagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         vp_pages.setAdapter(pagerAdapter);
 
-        TabLayout tbl_pages = (TabLayout) findViewById(R.id.tbl_pages);
+        TabLayout tbl_pages =  findViewById(R.id.tbl_pages);
         tbl_pages.setupWithViewPager(vp_pages);
 
     }
@@ -141,7 +106,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -173,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -196,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
