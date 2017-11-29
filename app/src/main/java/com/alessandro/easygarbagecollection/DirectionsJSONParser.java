@@ -29,22 +29,26 @@ import com.google.android.gms.maps.model.LatLng;
             jRoutes = jObject.getJSONArray("routes");
 
             /* Traversing all routes */
-            for(int i=0;i<jRoutes.length();i++){
+            int routesLength = jRoutes.length();
+            for(int i=0;i<routesLength;i++){
                 jLegs = ( (JSONObject)jRoutes.get(i)).getJSONArray("legs");
                 List<HashMap<String, String>> path = new ArrayList<>();
 
                 /* Traversing all legs */
-                for(int j=0;j<jLegs.length();j++){
+                int legsLength = jLegs.length();
+                for(int j=0;j<legsLength;j++){
                     jSteps = ( (JSONObject)jLegs.get(j)).getJSONArray("steps");
 
                     /* Traversing all steps */
-                    for(int k=0;k<jSteps.length();k++){
+                    int stepsLength = jSteps.length();
+                    for(int k=0;k<stepsLength;k++){
                         String polyline;
                         polyline = (String)((JSONObject)((JSONObject)jSteps.get(k)).get("polyline")).get("points");
                         List<LatLng> list = decodePoly(polyline);
 
                         /* Traversing all points */
-                        for(int l=0;l<list.size();l++){
+                        int listSize = list.size();
+                        for(int l=0;l<listSize;l++){
                             HashMap<String, String> hm = new HashMap<>();
                             hm.put("lat", Double.toString((list.get(l)).latitude) );
                             hm.put("lng", Double.toString((list.get(l)).longitude) );
@@ -55,9 +59,10 @@ import com.google.android.gms.maps.model.LatLng;
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.d("Exception w download", e.toString());
+
         }catch (Exception e){
-            Log.d("Background Task", e.toString());
+            Log.d("Exception with download", e.toString());
         }
         return routes;
     }

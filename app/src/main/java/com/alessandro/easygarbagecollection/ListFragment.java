@@ -18,6 +18,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
+/**
+ * list fragment
+ */
 public class ListFragment extends Fragment {
 
     DatabaseReference mRef;
@@ -27,11 +30,6 @@ public class ListFragment extends Fragment {
     ArrayList<TrashCan> trashCanArrayList;
     protected RecyclerView mRecyclerView;
     protected LinearLayoutManager mLayoutManager;
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

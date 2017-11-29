@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import com.alessandro.easygarbagecollection.MainActivity;
 import com.alessandro.easygarbagecollection.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ *Login class
+ */
 public class Login extends AppCompatActivity {
 
     private EditText inputEmail, inputPassword;

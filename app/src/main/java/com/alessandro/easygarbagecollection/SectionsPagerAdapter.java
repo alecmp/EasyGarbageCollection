@@ -21,7 +21,6 @@ import android.support.v4.app.FragmentPagerAdapter;
         switch (position) {
             case 0:
                 fragment = new EGCMapFragment();
-
                 break;
             case 1:
                 fragment = new ListFragment();
@@ -46,7 +45,8 @@ import android.support.v4.app.FragmentPagerAdapter;
                 return "Map";
             case 1:
                 return "List";
+
+            default: return "Map";
         }
-        return null;
     }
 }

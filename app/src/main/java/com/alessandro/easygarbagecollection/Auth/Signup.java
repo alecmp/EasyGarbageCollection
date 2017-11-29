@@ -21,14 +21,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+/**
+ * Activity to sign on EasygGarbageCollection
+ */
 public class Signup extends AppCompatActivity {
 
 
+    private static String fullname = null;
     private EditText inputFullName, inputEmail, inputPassword;
     Button btnSignIn, btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private static String fullname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

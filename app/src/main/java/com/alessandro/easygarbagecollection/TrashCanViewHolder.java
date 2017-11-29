@@ -4,11 +4,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.provider.SyncStateContract;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -17,7 +18,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
@@ -35,6 +35,7 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
     private Double latitude;
     private Context mContext;
     private static final Double TRESHOLD = 25.0;
+    public static final String TAG = "easygarbagecollection";
 
     TrashCanViewHolder(View itemView, Context context) {
         super(itemView);
@@ -65,7 +66,7 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Exception");
         }
         String address = null;
         if (addresses != null) {
