@@ -23,7 +23,7 @@ public class ListFragment extends Fragment {
     DatabaseReference mRef;
     FirebaseRecyclerAdapter<TrashCan, TrashCanViewHolder> mAdapter;
     protected static final Query mQuery =
-            FirebaseDatabase.getInstance().getReference().child("Navigation").limitToLast(50);
+            FirebaseDatabase.getInstance().getReference().child("Navigation").orderByChild("code").limitToLast(50);
     ArrayList<TrashCan> trashCanArrayList;
     protected RecyclerView mRecyclerView;
     protected LinearLayoutManager mLayoutManager;
