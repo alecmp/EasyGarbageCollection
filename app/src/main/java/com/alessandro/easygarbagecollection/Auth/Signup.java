@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import com.alessandro.easygarbagecollection.R;
 import com.alessandro.easygarbagecollection.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,7 +25,7 @@ public class Signup extends AppCompatActivity {
 
 
     private EditText inputFullName, inputEmail, inputPassword;
-    private Button btnSignIn, btnSignUp, btnResetPassword;
+    Button btnSignIn, btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private static String fullname;
@@ -33,18 +34,18 @@ public class Signup extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
-        Toolbar toolbar =  findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
         auth = FirebaseAuth.getInstance();
 
-        btnSignIn = (Button) findViewById(R.id.sign_in_button);
-        btnSignUp = (Button) findViewById(R.id.sign_up_button);
-        inputFullName = (EditText) findViewById(R.id.fullname);
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        btnSignIn = findViewById(R.id.sign_in_button);
+        btnSignUp = findViewById(R.id.sign_up_button);
+        inputFullName = findViewById(R.id.fullname);
+        inputEmail = findViewById(R.id.email);
+        inputPassword = findViewById(R.id.password);
+        progressBar = findViewById(R.id.progressBar);
 
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +101,9 @@ public class Signup extends AppCompatActivity {
                                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                             .setDisplayName(fullname)
                                             .build();
-                                    user.updateProfile(profileUpdates);
+                                    if (user != null) {
+                                        user.updateProfile(profileUpdates);
+                                    }
 
 
                                     Intent intent = new Intent(Signup.this, MainActivity.class);
