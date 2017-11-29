@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
-import android.provider.SyncStateContract;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +34,6 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
     private Double latitude;
     private Context mContext;
     private static final Double TRESHOLD = 25.0;
-    public static final String TAG = "easygarbagecollection";
 
     TrashCanViewHolder(View itemView, Context context) {
         super(itemView);
@@ -66,7 +64,7 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 1);
         } catch (IOException e) {
-            Log.e(TAG, "Exception");
+            Log.d("Exception w geocoding", e.toString());
         }
         String address = null;
         if (addresses != null) {
@@ -81,11 +79,15 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
     }
 
     private void setFillingLevel(Double fillingLevel) {
-        mFillingLevel.setText(String.valueOf(fillingLevel));
+        if (fillingLevel != null){
+            mFillingLevel.setText(String.valueOf(fillingLevel));
+        }
     }
 
     private void setAddress(String address) {
-        mAddress.setText(address);
+        if(address != null) {
+            mAddress.setText(address);
+        }
     }
 
     @Override

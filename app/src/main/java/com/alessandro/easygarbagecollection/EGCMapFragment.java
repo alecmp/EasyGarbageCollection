@@ -27,7 +27,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,9 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Map fragment
- */
 public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -71,7 +70,6 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         getMapAsync(this);
         mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<>();
-
        *//*  TrashCan marker = new TrashCan("Start", "start", 41.103466, 16.8786148, "24/12/1940", "02/07/2016" );
         TrashCan marker2 = new TrashCan("secondo", "Campanello", 41.104069,16.8785068, "20/11/2017", "02/07/2016" );
         TrashCan marker3 = new TrashCan("terzo", "Campanello", 41.107092,16.8792508, "20/11/2017", "02/07/2016" );
@@ -81,7 +79,6 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mRef.push().setValue(marker2);
         mRef.push().setValue(marker3);
         mRef.push().setValue(marker4);*//*
-
     }*/
 
 
@@ -217,8 +214,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         // Waypoints
         StringBuilder waypoints = new StringBuilder();
         //for(int i=2;i<markerPoints.size();i++){
-        int size = markerPoints.size();
-        for (int i = 2; i < size; i++) {
+        for (int i = 2; i < markerPoints.size(); i++) {
             LatLng point = markerPoints.get(i);
             if (i == 2)
                 waypoints = new StringBuilder("waypoints=");
@@ -235,6 +231,9 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         Log.d("url", "is " + url);
         return url;
     }
+
+
+
 
     /**
      * A method to download json data from url
@@ -254,8 +253,8 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
             iStream = urlConnection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
             StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
-            while (line != null){
+            String line;
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
@@ -330,7 +329,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 // Starts parsing data
                 routes = parser.parse(jObject);
             } catch (Exception e) {
-                Log.d("Exception w download", e.toString());
+                e.printStackTrace();
             }
 
             return routes;
@@ -345,8 +344,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
             PolylineOptions lineOptions = null;
 
             // Traversing through all the routes
-            int routesSize = result.size();
-            for (int i = 0; i < routesSize; i++) {
+            for (int i = 0; i < result.size(); i++) {
                 points = new ArrayList<>();
                 lineOptions = new PolylineOptions();
 
@@ -354,8 +352,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                 List<HashMap<String, String>> path = result.get(i);
 
                 // Fetching all the points in i-th route
-                int pathSize = path.size();
-                for (int j = 0; j < pathSize; j++) {
+                for (int j = 0; j < path.size(); j++) {
                     HashMap<String, String> point = path.get(j);
 
                     double lat = Double.parseDouble(point.get("lat"));

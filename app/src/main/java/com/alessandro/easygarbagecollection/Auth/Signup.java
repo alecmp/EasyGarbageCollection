@@ -27,7 +27,10 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class Signup extends AppCompatActivity {
 
 
-    private static String fullname = null;
+    private static String fullname;
+    static {
+        fullname = null;
+    }
     private EditText inputFullName, inputEmail, inputPassword;
     Button btnSignIn, btnSignUp;
     private ProgressBar progressBar;
