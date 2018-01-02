@@ -66,12 +66,9 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
 
 
 
-        /*mRef = FirebaseDatabase.getInstance().getReference();
-        TrashCan marker = new TrashCan("0001", 34, 41.103466, 16.8786148, "AAA" );
-        mRef.child("Navigation").child("TC001").setValue(marker);*/
 
 
-        mRef = FirebaseDatabase.getInstance().getReference();
+     /*   mRef = FirebaseDatabase.getInstance().getReference();
         TrashCan marker = new TrashCan("0001", 34, 41.102333, 16.87356, "AAA" );
         TrashCan marker2 = new TrashCan("0004", 34, 41.122514, 16.875075, "AAA" );
         TrashCan marker3 = new TrashCan("0002", 34, 41.109548, 16.874069, "AAA" );
@@ -81,7 +78,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mRef.child("Navigation").child("TC004").setValue(marker2);
         mRef.child("Navigation").child("TC002").setValue(marker3);
         mRef.child("Navigation").child("TC003").setValue(marker4);
-
+*/
 
 
 
