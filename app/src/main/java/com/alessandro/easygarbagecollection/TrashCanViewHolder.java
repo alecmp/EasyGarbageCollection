@@ -22,13 +22,13 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Created by alessandro.campanell on 23/11/2017.
+ * Created by alessandro on 23/11/2017.
  * TrashCanViewHolder
  */
 
 public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMapReadyCallback {
 
-    private final TextView mCode, mFillingLevel, mAddress;
+    private final TextView mCode, mFillingLevel, mAddress, mLastUpdate;
     private final ImageView mFillingLevelIcon;
     private Double longitude;
     private Double latitude;
@@ -41,6 +41,7 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
         this.mCode = itemView.findViewById(R.id.code);
         this.mFillingLevel = itemView.findViewById(R.id.fillingLevel);
         this.mAddress = itemView.findViewById(R.id.address);
+        this.mLastUpdate = itemView.findViewById(R.id.lastUpdate);
         this.mFillingLevelIcon = itemView.findViewById(R.id.filling_level_icon);
         MapView map = itemView.findViewById(R.id.mapImageView);
 
@@ -57,6 +58,7 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
         setFillingLevel(trashCan.getFillingLevel());
         if (trashCan.getFillingLevel() > TRESHOLD) mFillingLevelIcon.setColorFilter(Color.RED);
         else mFillingLevelIcon.setColorFilter(Color.GREEN);
+        setLastUpdate(trashCan.getLastUpdate());
         longitude = trashCan.getLongitude();
         latitude = trashCan.getLatitude();
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
@@ -87,6 +89,12 @@ public class TrashCanViewHolder extends RecyclerView.ViewHolder implements OnMap
     private void setAddress(String address) {
         if(address != null) {
             mAddress.setText(address);
+        }
+    }
+
+    private void setLastUpdate(String lastUpdate) {
+        if(lastUpdate != null) {
+            mLastUpdate.setText(lastUpdate);
         }
     }
 

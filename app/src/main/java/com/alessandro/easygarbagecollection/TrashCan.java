@@ -1,22 +1,25 @@
 package com.alessandro.easygarbagecollection;
 
 /**
- * Created by alessandro.campanell on 20/11/2017.
+ * Created by alessandro on 20/11/2017.
  * TrashCan model
  */
 
 public class TrashCan {
 
-    private String code;
-    private double fillingLevel;
-    private double latitude;
-    private double longitude;
+    public String code;
+    public double fillingLevel;
+    public double latitude;
+    public double longitude;
+    public String lastUpdate;
 
-    public TrashCan(String code, double fillingLevel, double latitude, double longitude) {
+
+    public TrashCan(String code, double fillingLevel, double latitude, double longitude, String lastUpdate) {
         this.code = code;
         this.fillingLevel = fillingLevel;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.lastUpdate = lastUpdate;
     }
 
     public TrashCan() {
@@ -41,4 +44,5 @@ public class TrashCan {
         return latitude;
     }
 
+    String getLastUpdate() { return lastUpdate; }
 }

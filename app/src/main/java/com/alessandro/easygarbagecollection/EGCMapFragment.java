@@ -3,6 +3,7 @@ package com.alessandro.easygarbagecollection;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,9 +11,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +24,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.ChildEventListener;
@@ -58,6 +63,16 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mRef = FirebaseDatabase.getInstance().getReference();
         markerPoints = new ArrayList<>();
         fab = v.findViewById(R.id.fab);
+
+
+
+        /*mRef = FirebaseDatabase.getInstance().getReference();
+        TrashCan marker = new TrashCan("0001", 34, 41.103466, 16.8786148, "AAA" );
+        mRef.child("Navigation").child("TC001").setValue(marker);*/
+
+
+
+
         return  v;
     }
 
@@ -107,11 +122,13 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                     double latitude = 0;
                     double longitude = 0;
                     String code = null;
+                    String lastUpdate = null;
                     double fillingLevel = 0;
                     if (marker != null) {
                         latitude = marker.getLatitude();
                         longitude = marker.getLongitude();
                         code = marker.getCode();
+                        lastUpdate = marker.getLastUpdate();
                         fillingLevel = marker.getFillingLevel();
                     }
 
@@ -119,11 +136,11 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
 
                     //select Marker color according with filling level. If >25 adds it to markerPoints
                     if (fillingLevel > TRESHOLD) {
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%" + "\n" + "Last update: " + lastUpdate).icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                         markerPoints.add(location);
                     } else
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%" + "\n" + "Last update: " + lastUpdate).icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
                 LatLng origin = markerPoints.get(0);
@@ -188,6 +205,36 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
 
         });
 
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+
+            @Override
+            public View getInfoWindow(Marker arg0) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+
+                LinearLayout info = new LinearLayout(getContext());
+                info.setOrientation(LinearLayout.VERTICAL);
+
+                TextView title = new TextView(getContext());
+                title.setTextColor(Color.BLACK);
+                title.setGravity(Gravity.CENTER);
+                title.setTypeface(null, Typeface.BOLD);
+                title.setText(marker.getTitle());
+
+                TextView snippet = new TextView(getContext());
+                snippet.setTextColor(Color.GRAY);
+                snippet.setText(marker.getSnippet());
+
+                info.addView(title);
+                info.addView(snippet);
+
+                return info;
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,6 +247,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
     }
+
 
 
     private String getDirectionsUrl(LatLng origin, LatLng dest) {

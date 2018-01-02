@@ -1,18 +1,21 @@
 package com.alessandro.easygarbagecollection;
 
 /*
- * Created by alessandro.campanell on 21/11/2017.
+ * Created by alessandro on 21/11/2017.
  *DirectionsJSONParser
  */
 
 import android.util.Log;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.google.android.gms.maps.model.LatLng;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
  class DirectionsJSONParser {
 
