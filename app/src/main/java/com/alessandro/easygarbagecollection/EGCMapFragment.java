@@ -194,7 +194,7 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                         mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%" +"\n"+ "Last update: " + lastUpdate).icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
-                LatLng origin = markerPoints.get(0);//a
+                LatLng origin = markerPoints.get(0);//aa
                 LatLng dest = markerPoints.get(1);
                 url = getDirectionsUrl(origin, dest);
                 DownloadTask downloadTask = new DownloadTask();
