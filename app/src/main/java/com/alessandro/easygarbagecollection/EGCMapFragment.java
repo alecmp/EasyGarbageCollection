@@ -71,6 +71,19 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
         mRef.child("Navigation").child("TC001").setValue(marker);*/
 
 
+        mRef = FirebaseDatabase.getInstance().getReference();
+        TrashCan marker = new TrashCan("0001", 34, 41.102333, 16.87356, "AAA" );
+        TrashCan marker2 = new TrashCan("0004", 34, 41.122514, 16.875075, "AAA" );
+        TrashCan marker3 = new TrashCan("0002", 34, 41.109548, 16.874069, "AAA" );
+        TrashCan marker4 = new TrashCan("0003", 34, 41.116094, 16.879183, "AAA" );
+
+        mRef.child("Navigation").child("TC001").setValue(marker);
+        mRef.child("Navigation").child("TC004").setValue(marker2);
+        mRef.child("Navigation").child("TC002").setValue(marker3);
+        mRef.child("Navigation").child("TC003").setValue(marker4);
+
+
+
 
 
         return  v;
@@ -162,21 +175,23 @@ public class EGCMapFragment extends Fragment implements OnMapReadyCallback {
                     double latitude = 0;
                     double longitude = 0;
                     String code = null;
+                    String lastUpdate = null;
                     double fillingLevel = 0;
                     if (marker != null) {
                         latitude = marker.getLatitude();
                         longitude = marker.getLongitude();
                         code = marker.getCode();
+                        lastUpdate = marker.getLastUpdate();
                         fillingLevel = marker.getFillingLevel();
                     }
                     LatLng location = new LatLng(latitude, longitude);
                     //select Marker color according with filling level. If >25 adds it to markerPoints
                     if (fillingLevel > TRESHOLD) {
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%" +"\n"+ "Last update: " + lastUpdate).icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                         markerPoints.add(location);
                     } else
-                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%").icon(BitmapDescriptorFactory
+                        mMap.addMarker(new MarkerOptions().position(location).title(code).snippet("Filling level: " + fillingLevel + "%" +"\n"+ "Last update: " + lastUpdate).icon(BitmapDescriptorFactory
                                 .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                 }
                 LatLng origin = markerPoints.get(0);
