@@ -22,6 +22,8 @@ import com.alessandro.easygarbagecollection.Auth.Signup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Main fragment
@@ -123,11 +125,21 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            for (int i = 1; i < 10; i++) {
+                double random = Math.random();
+                if (random >= 0.5){
+                    mRef.child("Navigation").child("TC00"+i).child("fillingLevel").setValue(90);
+
+                }else{
+                    mRef.child("Navigation").child("TC00"+i).child("fillingLevel").setValue(20);
+                }
+
+            }
         }
 
         return super.onOptionsItemSelected(item);
