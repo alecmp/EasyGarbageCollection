@@ -25,6 +25,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Time;
+import java.util.Random;
+
 /**
  * Main fragment
  */
@@ -138,6 +141,14 @@ public class MainActivity extends AppCompatActivity
                 }else{
                     mRef.child("Navigation").child("TC00"+i).child("fillingLevel").setValue(20);
                 }
+
+                final Random rdm = new Random();
+                final int millisInDay = 24*60*60*1000;
+                Time time = new Time((long)rdm.nextInt(millisInDay));
+                String timeStr = time.toString();
+                mRef.child("Navigation").child("TC00"+i).child("lastUpdate").setValue(timeStr);
+
+
 
             }
         }
