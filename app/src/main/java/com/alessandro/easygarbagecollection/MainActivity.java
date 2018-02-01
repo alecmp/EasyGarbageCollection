@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Time;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Main fragment
@@ -133,25 +134,30 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            for (int i = 1; i < 10; i++) {
+
+                int randomTrashCan = ThreadLocalRandom.current().nextInt(3, 9);
                 double random = Math.random();
                 if (random >= 0.5){
-                    mRef.child("Navigation").child("TC00"+i).child("fillingLevel").setValue(90);
+                    mRef.child("Navigation").child("TC00"+randomTrashCan).child("fillingLevel").setValue(90);
 
                 }else{
-                    mRef.child("Navigation").child("TC00"+i).child("fillingLevel").setValue(20);
+                    mRef.child("Navigation").child("TC00"+randomTrashCan).child("fillingLevel").setValue(20);
                 }
 
                 final Random rdm = new Random();
                 final int millisInDay = 24*60*60*1000;
                 Time time = new Time((long)rdm.nextInt(millisInDay));
                 String timeStr = time.toString();
-                mRef.child("Navigation").child("TC00"+i).child("lastUpdate").setValue(timeStr);
+                mRef.child("Navigation").child("TC00"+randomTrashCan).child("lastUpdate").setValue(timeStr);
 
-
-
-            }
         }
+     /*   try {
+            //set time in mili
+            Thread.sleep(2000);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
