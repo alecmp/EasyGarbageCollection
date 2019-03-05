@@ -1,4 +1,4 @@
-# Easy Garbage Collection
+# Collector route optimizer
 Waste management as an IoT-enabled Service in Smart Cities
 
 # Problem
